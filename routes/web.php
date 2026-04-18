@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Personnel\Stagiaire;
+use App\Models\Personnel\BulletinSalaire;
+use App\Models\EtatCivil\Extrait;
+
 use App\Http\Controllers\Personnels\{
     AgentNonPermanentController,
     AgentPermanentController,
@@ -14,9 +18,14 @@ use App\Http\Controllers\Personnels\{
     AdministrationController,
     DashboardController
 };
+ use App\Http\Controllers\EtatCivils\DashboardController as EtatCivilDashboard;
+ use App\Http\Controllers\EtatCivils\ExtraitController;
+ use App\Http\Controllers\EtatCivils\MariageController;
+ use App\Http\Controllers\EtatCivils\DecesController;
+ use App\Http\Controllers\EtatCivils\AutreDeclationController;
+ use App\Http\Controllers\EtatCivils\AdminEtatCivilController;
 
-use App\Models\Personnel\Stagiaire;
-use App\Models\Personnel\BulletinSalaire;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +89,23 @@ Route::middleware([
 
     });
 
+
+     /*
+    |--------------------------------------------------------------------------
+    | ETAT CIVILS
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('etatcivils')->name('etatcivils.')->group(function () {
+
+    Route::get('/dashboard',  [EtatCivilDashboard::class, 'index'])->name('dashboard');
+    Route::get('/naissances', [ExtraitController::class, 'index'])->name('naissances');
+    Route::get('/mariages', [MariageController::class, 'index'])->name('mariages');
+    Route::get('/deces', [DecesController::class, 'index'])->name('deces');
+    Route::get('/autre-declarations', [AutreDeclationController::class, 'index'])->name('autredeclaration');
+    Route::get('/administrations', [AdminEtatCivilController::class, 'index'])->name('administrations');
+    
+});
+
     /*
     |--------------------------------------------------------------------------
     | IMPRESSIONS PDF
@@ -102,5 +128,30 @@ Route::middleware([
     Route::get('/stagiaires/{stagiaire}/fin', function (Stagiaire $stagiaire) {
         return view('pdf.stagiaire-fin', compact('stagiaire'));
     })->name('stagiaires.print.fin');
+
+
+
+Route::prefix('naissances')->name('naissances.print.')->middleware('auth')->group(function () {
+
+    Route::get('/{extrait}/extrait', function (Extrait $extrait) {
+        $extrait->load(['commune', 'mentions']);
+        return view('pdf.extrait-naissance', compact('extrait'));
+    })->name('extrait');
+
+    Route::get('/{extrait}/copie', function (Extrait $extrait) {
+        $extrait->load(['commune', 'mentions']);
+        return view('pdf.copie-integrale', compact('extrait'));
+    })->name('copie');
+
+    Route::get('/{extrait}/jugement', function (Extrait $extrait) {
+        $extrait->load(['commune', 'mentions']);
+        return view('pdf.copie-integrale-jugement', compact('extrait'));
+    })->name('jugement');
+
+    Route::get('/{extrait}/requisition', function (Extrait $extrait) {
+        $extrait->load(['commune', 'mentions']);
+        return view('pdf.copie-integrale-requisition', compact('extrait'));
+    })->name('requisition');
+});
 
 });

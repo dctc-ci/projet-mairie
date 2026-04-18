@@ -126,11 +126,10 @@
                 </a>
 
                 {{-- ── Card État Civil ── --}}
-                <div class="bg-white rounded-2xl overflow-hidden flex flex-col relative shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.05)] cursor-default animate-card-in [animation-delay:150ms]">
+                <a href="{{ route('etatcivils.dashboard') }}" class="group bg-white rounded-2xl overflow-hidden flex flex-col no-underline relative transition-all duration-300 shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.05)] hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(11,31,58,0.15),0_0_0_1px_rgba(11,31,58,0.06)] cursor-pointer animate-card-in [animation-delay:50ms]">
                     <div class="h-[5px] w-full bg-gradient-to-r from-green to-[#2d9b5a]"></div>
-                    <span class="absolute top-4 right-4 bg-gray-100 text-gray-400 text-[0.65rem] font-medium tracking-widest uppercase py-1 px-2.5 rounded-full">Bientôt disponible</span>
                     <div class="p-7 flex-1 flex flex-col">
-                        <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-5 bg-[rgba(26,107,58,0.08)] text-green">
+                        <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-5 bg-[rgba(11,31,58,0.07)] text-navy">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" class="w-7 h-7">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
@@ -144,14 +143,14 @@
                         </p>
                     </div>
                     <div class="flex items-center justify-between px-7 py-4 border-t border-navy/5">
-                        <span class="text-sm font-medium tracking-wide text-gray-400">En développement</span>
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 text-gray-300">
+                        <span class="text-sm font-medium tracking-wide text-navy">Accéder au module</span>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-250 bg-[rgba(11,31,58,0.07)] text-navy group-hover:translate-x-1">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="w-4 h-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
                             </svg>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 {{-- ── Card Prestations ── --}}
                 <div class="bg-white rounded-2xl overflow-hidden flex flex-col relative shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.05)] cursor-default animate-card-in [animation-delay:250ms]">

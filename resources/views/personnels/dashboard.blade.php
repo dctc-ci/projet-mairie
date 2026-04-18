@@ -274,30 +274,6 @@
             </div>
 
             <div class="flex items-center gap-2">
-                {{-- Recherche --}}
-                <div class="relative hidden md:block">
-                    <input type="text"
-                           placeholder="Rechercher un agent…"
-                           class="w-52 lg:w-64 pl-9 pr-4 py-2 text-sm
-                                  bg-gray-50 border border-gray-200 rounded-xl
-                                  placeholder-gray-400 text-gray-700
-                                  focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy/30
-                                  transition-all">
-                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
-                    </svg>
-                </div>
-
-                {{-- Notifs --}}
-                <button class="relative w-9 h-9 rounded-xl bg-gray-50 border border-gray-100
-                               flex items-center justify-center text-gray-500
-                               hover:text-navy hover:bg-gray-100 transition-colors">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
-                    </svg>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-orange rounded-full ring-2 ring-white"></span>
-                </button>
 
                 {{-- Date --}}
                 <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5
@@ -330,27 +306,6 @@
                             Tableau de bord centralisé pour la gestion de l'effectif, le suivi des carrières
                             et l'administration des ressources humaines de la mairie.
                         </p>
-
-                        <div class="flex flex-wrap gap-3 mt-5">
-                            <a href="/personnels/agents-permanents"
-                               class="inline-flex items-center gap-2 px-4 py-2
-                                      bg-gold text-navy text-xs font-semibold rounded-xl
-                                      hover:bg-yellow-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-                                </svg>
-                                Nouvel agent
-                            </a>
-                            <a href="/personnels/sollicitations"
-                               class="inline-flex items-center gap-2 px-4 py-2
-                                      bg-white/10 text-white text-xs font-medium rounded-xl
-                                      hover:bg-white/20 transition-colors border border-white/10">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 2.012l-7.5 4.5a2.25 2.25 0 0 1-2.36 0l-7.5-4.5A2.25 2.25 0 0 1 2.25 6.993V6.75"/>
-                                </svg>
-                                Nouvelle sollicitation
-                            </a>
-                        </div>
                     </div>
 
                     {{-- Déco --}}
