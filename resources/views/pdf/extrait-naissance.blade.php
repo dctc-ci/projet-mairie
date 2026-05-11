@@ -2,215 +2,388 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Extrait de Naissance — {{ strtoupper($extrait->nom_enfant ?? '') }} {{ $extrait->prenom_enfant ?? '' }}</title>
+<title>Extrait de Naissance - {{ strtoupper($extrait->nom_enfant ?? '') }} {{ $extrait->prenom_enfant ?? '' }}</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: Arial, Helvetica, sans-serif; font-size: 10px; background:#fff; color:#000; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-.page {
-    width: 210mm; height: 297mm;
-    margin: 0 auto;
-    padding: 8mm 10mm;
+body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 11px;
     background: #fff;
-    display: flex; flex-direction: column;
-    position: relative;
-    overflow: hidden;
+    color: #000;
 }
 
-/* ── Filigrane ── */
+.page {
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto;
+    padding: 10mm 12mm 8mm 12mm;
+    background: #fff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Filigrane centré ── */
 .filigrane {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 160mm; height: 160mm;
+    width: 170mm; height: 170mm;
     opacity: 0.07;
     z-index: 0;
     pointer-events: none;
 }
 
-.content { position: relative; z-index: 1; flex:1; display:flex; flex-direction:column; }
-
-/* ── En-tête 2 colonnes ── */
-.header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px; }
-.header-left { flex:1; font-size:9px; line-height:1.5; }
-.header-left .dept { font-weight:bold; text-decoration:underline; text-transform:uppercase; letter-spacing:.3px; }
-.header-left .commune { font-weight:bold; text-decoration:underline; text-transform:uppercase; font-size:9.5px; }
-.header-right { text-align:right; font-size:9px; line-height:1.5; }
-.header-right .rep { font-weight:bold; text-transform:uppercase; letter-spacing:.3px; }
-.header-right .devise { font-size:8.5px; text-decoration:underline; }
-
-/* ── Logo / État-Civil ── */
-.logo-zone { display:flex; flex-direction:column; align-items:center; margin: 3px 0; }
-.logo-zone img { width:40px; height:40px; object-fit:contain; }
-.logo-zone .ec { font-weight:bold; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
-.logo-zone .centre { font-size:8px; font-style:italic; color:#555; }
-
-/* ── Titre document ── */
-.titre-doc {
-    text-align:center;
-    border: 1px solid #000;
-    padding: 5px 10px;
-    margin: 4px 0;
-}
-.titre-doc .t1 { font-size:16px; font-weight:bold; text-transform:uppercase; letter-spacing:2px; }
-.titre-doc .t2 { font-size:9px; margin-top:1px; }
-
-/* ── Registre ── */
-.registre-line {
-    display:flex;
-    align-items:center;
-    border: 1px solid #000;
-    border-top: none;
-    padding: 3px 6px;
-    font-size:9px;
-    gap: 20px;
-}
-.registre-line .cell { display:flex; align-items:center; gap:4px; }
-.registre-line .cell .underline-val {
-    border-bottom: 1px solid #000;
-    min-width: 40px;
-    display:inline-block;
-    padding: 0 3px;
-}
-
-/* ── Naissance de ── */
-.naiss-header {
-    border: 1px solid #000;
-    border-top: none;
-    display:flex;
-}
-.naiss-left {
-    width: 60mm;
-    border-right: 1px solid #000;
-    padding: 4px 6px;
-    font-size:10px;
-    font-weight:bold;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-transform:uppercase;
-    letter-spacing:1px;
-}
-.naiss-right {
-    flex:1;
-    padding: 3px 6px;
-    font-size:9px;
-    display:flex;
-    align-items:center;
-}
-
-/* ── Corps principal (2 colonnes) ── */
-.corps {
-    border: 1px solid #000;
-    border-top: none;
-    display:flex;
-    flex: 1;
-}
-.corps-left {
-    width: 60mm;
-    border-right: 1px solid #000;
-    padding: 4px 6px;
-    font-size:9px;
-    line-height:2.2;
+.content {
     position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
-.corps-right {
-    flex:1;
-    padding: 4px 8px;
-    font-size:9px;
-    line-height:2.2;
+
+/* ════════════════════════════════
+   ENTÊTE : 2 colonnes côte à côte
+   ════════════════════════════════ */
+.entete {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
 }
-.val {
-    border-bottom: 1px solid #000;
-    display: inline-block;
-    min-width: 70px;
-    padding: 0 2px;
+
+/* ── Colonne gauche ── */
+.col-gauche {
+    width: 80mm;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 10px;
+}
+
+.col-gauche .dept {
     font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: .2px;
+    margin-bottom: 1px;
 }
-.val-long {
-    border-bottom: 1px solid #000;
-    display: inline-block;
-    min-width: 120px;
-    padding: 0 2px;
+.col-gauche .tiret {
+    font-size: 15px;
+    color: #333;
+    margin: 2px 0;
+    margin-left:30px;
+    letter-spacing: 3px;
+}
+.col-gauche .commune {
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: .2px;
+    margin-bottom: 4px;
+}
+
+.logo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: ;
+    width: 100%;
+    margin: 6px 0 4px 0;
+}
+.logo-wrap img {
+    width: 60px;
+    height: 60px;
+    margin-left: 40px;
+    object-fit: contain;
+}
+.logo-placeholder {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    color: #aaa;
+}
+
+.ec-title {
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-left:30px;
+    margin-top: 4px;
+    text-align: left;
+}
+.ec-tiret {
+    letter-spacing: 3px;
+    font-size: 15px;
+    margin: 2px 0;
+    margin-left:40px;
+    color: #444;
+}
+.ec-centre {
+    font-size: 15px;
+    font-style: italic;
+    margin-bottom: 2px;
+    margin-left:30px;
+}
+
+/* Bas colonne gauche */
+.col-gauche-bas {
+    margin-top: 20px;
+    line-height: 1.9;
+}
+.registre-ref {
+    font-weight: bold;
+    font-size: 15px;
+    white-space: nowrap;
+    margin-bottom: 14px;
+}
+.naiss-label {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+.enfant-prenom {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+}
+.enfant-nom {
+    font-weight: bold;
+    font-size: 14px;
+    display: block;
+}
+
+/* ── Colonne droite ── */
+.col-droite {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 6mm;
+}
+
+.rep {
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    text-align: center;
+    margin-bottom: 2px;
+}
+.rep-tiret {
+    letter-spacing: 3px;
+    font-size: 15px;
+    text-align: center;
+    color: #444;
+    margin-bottom: 4px;
+}
+
+.titre-extrait {
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 8px;
+    text-align: center;
+    margin: 4px 0 2px 0;
+    text-transform: uppercase;
+}
+.titre-sous {
+    font-size: 17px;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 4px;
+}
+
+/* ── Texte narratif ── */
+.narration {
+    width: 100%;
+    margin-top: 40px;
+    font-size: 17px;
+    line-height: 2.3;
+}
+.narration .ligne {
+    display: block;
+}
+.narration .ligne .b {
     font-weight: bold;
 }
 
-/* ── Mentions ── */
-.mentions-section {
-    border: 1px solid #000;
-    border-top: none;
-    padding: 5px 8px;
+/* ════════════════════════════════
+   SÉPARATEUR DOUBLE LIGNE
+   ════════════════════════════════ */
+.double-sep {
+    margin: 14px 0 10px 0;
+    border-top: 2px solid #000;
+    border-bottom: 1px solid #000;
+    padding-bottom: 3px;
 }
-.mentions-title {
-    text-align:center;
-    font-weight:bold;
-    font-size:11px;
-    letter-spacing:4px;
-    text-transform:uppercase;
-    margin-bottom:4px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom:2px;
+
+/* ════════════════════════════════
+   MENTIONS
+   ════════════════════════════════ */
+.mentions-zone {
+    font-size: 30px !important;
 }
-.mention-line {
-    font-size:9px;
-    line-height:2.3;
-    display:flex;
-    align-items:baseline;
-    gap:3px;
+.mentions-titre {
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 8px;
 }
-.m-dots {
-    flex:1;
-    border-bottom: 1px dotted #aaa;
-    height:1em;
+.m-line {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 2px;
+    font-size: 18px;
+    line-height: 1.9;
+}
+.m-line .txt { flex-shrink: 0; }
+.m-val-bold { font-weight: bold; margin: 0 1px; flex-shrink: 0; }
+.m-dots-fill {
+    flex: 1;
+    border-bottom: 1px dotted #555;
     margin: 0 3px;
-    vertical-align:bottom;
+    min-width: 15px;
 }
-.m-val { font-weight:bold; min-width:30px; display:inline-block; border-bottom:1px solid #000; }
 
-/* ── Certification & Footer ── */
-.certification {
-    border: 1px solid #000;
-    border-top: none;
-    padding: 3px 8px;
-    font-size:8.5px;
-    font-style:italic;
-    text-align:center;
+.cert-line {
+    font-size: 20px;
+    font-style: italic;
+    margin-top: 8px;
 }
-.footer-doc {
-    border: 1px solid #000;
-    border-top: none;
-    padding: 4px 8px;
-    font-size:9px;
-}
-.footer-doc .lieu-date { margin-bottom:2px; }
-.footer-doc .officier { font-weight:bold; text-align:center; margin-top:4px; }
-.footer-doc .sig { font-style:italic; text-align:center; }
 
-/* ── QR ── */
-.qr-zone { margin-top:4px; }
+/* ════════════════════════════════
+   FOOTER
+   ════════════════════════════════ */
+.footer-zone {
+    margin-top: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.footer-gauche {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 52mm;
+    flex-shrink: 0;
+}
+.timbre-box {
+    width: 50mm;
+    height: 36mm;
+    border: 1px dashed #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #bbb;
+    background: #fafafa;
+}
+.barcode-box {
+    width: 50mm;
+    height: 14mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #000;
+    letter-spacing: -2px;
+    font-family: "Courier New", monospace;
+    border: 1px solid #ccc;
+}
+
+.footer-droite {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 10.5px;
+    gap: 6px;
+}
+.delivery-line {
+    font-size: 10.5px;
+    text-align: right;
+}
+.sig-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 55mm;
+}
+.sig-title { font-size: 10.5px; font-style: italic; margin-bottom: 4px; }
+.sig-image-box {
+    width: 45mm;
+    height: 24mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #bbb;
+    font-style: italic;
+}
+.sig-label {
+    font-size: 9.5px;
+    font-style: italic;
+    border-top: 1px solid #000;
+    padding-top: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.officier-bas {
+    margin-top: 6px;
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.6;
+    border: 1px solid #999;
+    padding: 4px 10px;
+    display: inline-block;
+}
+.officier-bas .o-title { font-weight: bold; font-size: 11px; }
+
+.ref-doc {
+    font-size: 8px;
+    color: #666;
+    text-align: right;
+    margin-top: 4px;
+    font-style: italic;
+}
 
 /* ── Impression ── */
 @media print {
-    body { background:#fff; }
-    .page { margin:0; }
-    .no-print { display:none !important; }
-    @page { size: A4; margin:0; }
+    body { background: #fff; }
+    .page { margin: 0; }
+    .no-print { display: none !important; }
+    @page { size: A4; margin: 0; }
 }
+
 .btn-print {
-    position:fixed; top:14px; right:14px;
-    background:#1A6B3A; color:#fff; border:none; border-radius:10px;
-    padding:10px 18px; font-size:13px; font-weight:bold;
-    cursor:pointer; display:flex; align-items:center; gap:8px;
-    box-shadow:0 4px 12px rgba(0,0,0,.2); z-index:100;
+    position: fixed;
+    top: 14px; right: 14px;
+    background: #1A6B3A; color: #fff;
+    border: none; border-radius: 10px;
+    padding: 10px 18px; font-size: 13px;
+    font-weight: bold; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2); z-index: 100;
 }
-.btn-print:hover { background:#155a30; }
+.btn-print:hover { background: #155a30; }
 </style>
 </head>
 <body>
 
 <button class="btn-print no-print" onclick="window.print()">
     <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"/>
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659"/>
     </svg>
     Imprimer
 </button>
@@ -218,16 +391,70 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 10px; background:#f
 @php
     $e       = $extrait;
     $commune = $e->commune;
-    $fd = fn($v) => $v ? \Carbon\Carbon::parse($v)->locale('fr')->isoFormat('DD MMMM YYYY') : '';
-    $fv = fn($v) => $v ?? '';
-    $dateAuj = \Carbon\Carbon::now()->locale('fr')->isoFormat('dddd D MMMM YYYY');
-    $communeNom = $commune?->nom_commune ?? 'Kouassi-Kouassikro';
-    $deptNom    = $commune?->departement ?? 'Kouassi-Kouassikro';
+    $fv      = fn($v) => $v ?? '';
 
-    // Mentions
+    $communeNom = $commune?->nom_commune ?? '';
+    $deptNom    = $commune?->departement ?? '';
+    $centreName = $commune?->centre      ?? $communeNom;
+
+    /* ── Date naissance en lettres ── */
+    $fmt = new \NumberFormatter('fr', \NumberFormatter::SPELLOUT);
+    $dateNaissLettre = '';
+    $heure_min_naissance    = '';
+
+    if ($e->date_naissance) {
+    $dn  = \Carbon\Carbon::parse($e->date_naissance)->locale('fr');
+
+    $dateNaissLettre =
+        $fmt->format($dn->day) . ' ' .
+        $dn->isoFormat('MMMM') . ' ' .
+        $fmt->format($dn->year);
+}
+
+    /* ── Heure en lettres (heure_naissance = "HH:MM") ── */
+    if (!empty($e->heure_min_naissance)) {
+
+    // Normaliser le format (14H30 → 14:30)
+    $time = str_replace('H', ':', strtoupper($e->heure_min_naissance));
+
+    [$hh, $mm] = array_pad(explode(':', $time), 2, 0);
+
+    $hh = (int)$hh;
+    $mm = (int)$mm;
+
+    $hL = $fmt->format($hh) . ' heure' . ($hh > 1 ? 's' : '');
+    $mL = $mm > 0 ? ' ' . $fmt->format($mm) . ' minute' . ($mm > 1 ? 's' : '') : '';
+
+    $heure_min_naissance = $hL . $mL;
+}
+
+    /* ── Date dressage courte (N° registre) ── */
+    $dateRegistre = $e->date_dressage
+        ? \Carbon\Carbon::parse($e->date_dressage)->format('d/m/Y')
+        : '';
+
+    /* ── fils / fille ── */
+    $filsFille = ($e->sexe === 'F') ? 'fille de' : 'fils de';
+    $estNe     = ($e->sexe === 'F') ? 'est née' : 'est né';
+
+    /* ── Mentions ── */
     $mentions = $e->mentions ?? collect();
-    $m1 = $mentions->first();
-    $m2 = $mentions->skip(1)->first();
+    $m1       = $mentions->first();
+
+    $mVal = function($v) {
+        return $v ? $v : 'Néant';
+    };
+    $mDate = function($v) {
+        return $v
+            ? \Carbon\Carbon::parse($v)->locale('fr')->isoFormat('DD MMMM YYYY')
+            : 'Néant';
+    };
+
+    /* ── Date livraison ── */
+    $dateDeliv = \Carbon\Carbon::now()->locale('fr')->isoFormat('D MMMM YYYY');
+
+    /* ── Ref document ── */
+    $refDoc = strtolower(str_replace(' ', '', $communeNom)) . '.ab' . date('dmY') . ($e->id ?? '');
 @endphp
 
 <div class="page">
@@ -239,131 +466,203 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 10px; background:#f
 
     <div class="content">
 
-        {{-- ── En-tête ── --}}
-        <div class="header">
-            <div class="header-left">
-                <div class="dept">DEPARTEMENT DE {{ strtoupper($deptNom) }}</div>
+        {{-- ══════════════════════════════
+             ENTÊTE : Gauche + Droite
+             ══════════════════════════════ --}}
+        <div class="entete">
+
+            {{-- ──────── Colonne GAUCHE ──────── --}}
+            <div class="col-gauche">
+
+                <div class="dept">DEPARTEMENT DE {{ strtoupper($communeNom) }}</div>
+                <div class="tiret">--------</div>
                 <div class="commune">COMMUNE DE {{ strtoupper($communeNom) }}</div>
-                @if(file_exists(public_path('storage/img/amoirie.png')))
-                <div class="logo-zone">
-                    <img src="{{ asset('storage/img/amoirie.png') }}" alt="">
-                    <div class="ec">ETAT-CIVIL</div>
-                    <div class="centre">Centre de {{ $communeNom }}</div>
+
+                <div class="logo-wrap">
+                    @if(file_exists(public_path('storage/img/logo-mairie.png')))
+                        <img src="{{ asset('storage/img/logo-mairie.png') }}" alt="logo">
+                    @elseif(file_exists(public_path('storage/img/amoirie.png')))
+                        <img src="{{ asset('storage/img/amoirie.png') }}" alt="armoiries">
+                    @else
+                        <div class="logo-placeholder">LOGO</div>
+                    @endif
                 </div>
-                @else
-                <div class="logo-zone">
-                    <div class="ec">ETAT-CIVIL</div>
-                    <div class="centre">Centre de {{ $communeNom }}</div>
-                </div>
-                @endif
-            </div>
-            <div class="header-right">
-                <div class="rep">REPUBLIQUE DE COTE D'IVOIRE</div>
-                <div class="devise">-----------</div>
-                <div style="margin-top:16px">
-                    <div class="titre-doc">
-                        <div class="t1">EXTRAIT</div>
-                        <div class="t2">Du registre des actes de Naissance<br>pour l'année <strong>{{ $fv($e->annee_registre_extrai) }}</strong></div>
+
+                <div class="ec-title">ETAT CIVIL</div>
+                <div class="ec-tiret">--------</div>
+                <div class="ec-centre">Centre de {{ $centreName }}</div>
+                <div class="ec-tiret">--------</div>
+
+                <div class="col-gauche-bas">
+                    <div class="registre-ref">
+                        N°{{ $fv($e->numero_act_extrai) }} DU {{ $dateRegistre }} DU REGISTRE
                     </div>
+
+                    <div class="naiss-label">NAISSANCE DE</div>
+
+                    <span class="enfant-prenom">{{ $fv($e->prenom_enfant) }}</span>
+                    <span class="enfant-nom">{{ strtoupper($fv($e->nom_enfant)) }}.&nbsp;/</span>
                 </div>
+
+            </div>{{-- /col-gauche --}}
+
+            {{-- ──────── Colonne DROITE ──────── --}}
+            <div class="col-droite">
+
+                <div class="rep">REPUBLIQUE DE COTE D'IVOIRE</div>
+                <div class="rep-tiret">--------</div>
+
+                <div class="titre-extrait">E X T R A I T</div>
+                <div class="titre-sous">
+                    Du registre des actes de l'Etat Civil<br>
+                    Pour l'année&nbsp;&nbsp;<strong>{{ $fv($e->annee_registre_extrai) }}</strong>
+                </div>
+
+                {{-- Texte narratif --}}
+                <div class="narration">
+
+                    @if($dateNaissLettre)
+                    <span class="ligne">
+                        Le&nbsp;<span class="b">{{ $dateNaissLettre }}</span>&nbsp;./
+                    </span>
+                    @endif
+
+                    @if($heure_min_naissance)
+                    <span class="ligne">
+                        à&nbsp;<span class="b">{{ $heure_min_naissance }}</span>&nbsp;./
+                    </span>
+                    @endif
+
+                    <span class="ligne">
+                        {{ $estNe }}&nbsp;<span class="b">{{ $fv($e->prenom_enfant) }}</span>&nbsp;./
+                    </span>
+
+                    @if($fv($e->lieux_naissance))
+                    <span class="ligne">
+                        à la&nbsp;<span class="b">{{ $fv($e->lieux_naissance) }}</span>&nbsp;./
+                    </span>
+                    @endif
+
+                    <span class="ligne">
+                        {{ $filsFille }}&nbsp;<span class="b">{{ $fv($e->nom_prenom_pere) }}</span>&nbsp;./
+                    </span>
+
+                    @if($fv($e->profession_pere))
+                    <span class="ligne">
+                        profession&nbsp;<span class="b">{{ $fv($e->profession_pere) }}</span>&nbsp;./
+                    </span>
+                    @endif
+
+                    @if($fv($e->domicile_pere))
+                    <span class="ligne">
+                        domicilié à&nbsp;<span class="b">{{ $fv($e->domicile_pere) }}</span>&nbsp;./
+                    </span>
+                    @endif
+
+                    <span class="ligne">
+                        et de&nbsp;<span class="b">{{ $fv($e->nom_prenom_mere) }}</span>&nbsp;./
+                    </span>
+
+                    @if($fv($e->profession_mere))
+                    <span class="ligne">
+                        profession&nbsp;<span class="b">{{ $fv($e->profession_mere) }}</span>&nbsp;./
+                    </span>
+                    @endif
+
+                    @if($fv($e->domicile_mere))
+                    <span class="ligne">
+                        domiciliée à&nbsp;<span class="b">{{ $fv($e->domicile_mere) }}</span>&nbsp;./
+                    </span>
+                    @endif
+
+                </div>
+
+            </div>{{-- /col-droite --}}
+
+        </div>{{-- /entete --}}
+
+        {{-- ══ DOUBLE SÉPARATEUR ══ --}}
+        <div class="double-sep"></div>
+
+        {{-- ══════════════════════════════
+             MENTIONS
+             ══════════════════════════════ --}}
+        <div class="mentions-zone">
+
+            <div class="mentions-titre">M E N T I O N S &nbsp; (éventuellement)</div>
+
+            <div class="m-line">
+                <span class="txt">Marié le&nbsp;</span>
+                <span class="m-val-bold">...&nbsp;{{ $mDate($m1?->date_mariage_mention) }}&nbsp;</span>
+                <span class="m-dots-fill"></span>
+                <span class="txt">&nbsp;à&nbsp;</span>
+                <span class="m-val-bold">...&nbsp;{{ $mVal($m1?->lieu_mariage_mention ?? null) }}&nbsp;</span>
+                <span class="m-dots-fill"></span>
             </div>
+
+            <div class="m-line">
+                <span class="txt">avec&nbsp;</span>
+                <span class="m-val-bold">...&nbsp;{{ $mVal($m1?->nom_prenom_conjoint_mention ?? null) }}&nbsp;</span>
+                <span class="m-dots-fill"></span>
+            </div>
+
+            <div class="m-line">
+                <span class="txt">Mariage dissous par décision de divorce en date du&nbsp;</span>
+                <span class="m-val-bold">...&nbsp;{{ $mDate($m1?->date_mariage_dissous) }}&nbsp;</span>
+                <span class="m-dots-fill"></span>
+            </div>
+
+            <div class="m-line">
+                <span class="txt">Décédé le&nbsp;</span>
+                <span class="m-val-bold">...&nbsp;{{ $mDate($m1?->date_deces_mention) }}&nbsp;</span>
+                <span class="m-dots-fill"></span>
+                <span class="txt">&nbsp;à&nbsp;</span>
+                <span class="m-val-bold">...&nbsp;{{ $mVal($m1?->lieu_deces_mention ?? null) }}&nbsp;</span>
+                <span class="m-dots-fill"></span>
+            </div>
+
+            <div class="cert-line">
+                Certifié le présent extrait conforme aux indications portées au registre
+            </div>
+
         </div>
 
-        {{-- ── Registre ── --}}
-        <div class="registre-line">
-            <div class="cell">N° <span class="underline-val">{{ $fv($e->numero_act_extrai) }}</span></div>
-            <div class="cell">Du <span class="underline-val">{{ $fd($e->date_dressage) }}</span></div>
-            <div class="cell">DU REGISTRE</div>
-        </div>
+        {{-- ══════════════════════════════
+             FOOTER
+             ══════════════════════════════ --}}
+        <div class="footer-zone">
 
-        {{-- ── Naissance de ── --}}
-        <div class="naiss-header">
-            <div class="naiss-left">NAISSANCE DE</div>
-            <div class="naiss-right" style="font-weight:bold; font-size:11px; text-transform:uppercase; letter-spacing:.5px;">
-                {{ $fv($e->nom_enfant) }} {{ $fv($e->prenom_enfant) }}
-            </div>
-        </div>
 
-        {{-- ── Corps (2 colonnes) ── --}}
-        <div class="corps">
-            <div class="corps-left">
-                <div>à</div>
-                <div>est né</div>
-                <div>l'enfant</div>
-                <div>de Sexe</div>
-                <div>de:</div>
-                <div style="margin-top:4px;">Profession</div>
-                <div>Domicilié à</div>
-                <div>et de</div>
-                <div>Profession</div>
-                <div>Domiciliée à</div>
-            </div>
-            <div class="corps-right">
-                <div><span class="val">{{ $fd($e->date_naissance) }}</span></div>
-                <div><span class="val-long">{{ $fv($e->lieux_naissance) }}</span></div>
-                <div><span class="val-long">{{ $fv($e->nom_prenom_pere) }}</span></div>
-                <div><span class="val">{{ $e->sexe === 'M' ? 'Masculin' : ($e->sexe === 'F' ? 'Féminin' : '') }}</span></div>
-                <div><span class="val-long">{{ $fv($e->nom_prenom_pere) }}</span></div>
-                <div><span class="val">{{ $fv($e->profession_pere) }}</span></div>
-                <div><span class="val-long">{{ $fv($e->domicile_pere) }}</span></div>
-                <div><span class="val-long">{{ $fv($e->nom_prenom_mere) }}</span></div>
-                <div><span class="val">{{ $fv($e->profession_mere) }}</span></div>
-                <div><span class="val-long">{{ $fv($e->domicile_mere) }}</span></div>
-            </div>
-        </div>
+            {{-- Droite : livraison + signature + officier --}}
+            <div class="footer-droite">
 
-        {{-- ── Mentions ── --}}
-        <div class="mentions-section">
-            <div class="mentions-title">M E N T I O N S &nbsp;&nbsp; (éventuellement)</div>
-            <div class="mention-line">
-                Marié(e) le <span class="m-val">{{ $m1 ? $fd($m1->date_mariage_mention) : '' }}</span>
-                à <span class="m-dots"></span>
-                N<span class="m-val">{{ $m1?->ref_act_dissous ?? '' }}</span>
-            </div>
-            <div class="mention-line">
-                Avec <span class="m-dots"></span>
-                à <span class="m-dots"></span>
-            </div>
-            <div class="mention-line">
-                Mariage dissous par Décision de divorce en date du
-                <span class="m-val">{{ $m1 ? $fd($m1->date_mariage_dissous) : '' }}</span>
-                à <span class="m-dots"></span>
-            </div>
-            <div class="mention-line" style="margin-top:3px;">
-                &nbsp;
-                <span class="m-dots"></span>
-            </div>
-            <div class="mention-line">
-                Décédé(e) le
-                <span class="m-val">{{ $m1 ? $fd($m1->date_deces_mention) : '' }}</span>
-                à <span class="m-dots"></span>
-                l <span class="m-dots"></span>
-            </div>
-        </div>
+                <div class="delivery-line">
+                    Délivré à&nbsp;<strong>{{ strtoupper($communeNom) }}</strong>&nbsp;,&nbsp;le&nbsp;{{ $dateDeliv }}
+                </div>
 
-        {{-- ── Certification ── --}}
-        <div class="certification">
-            Certifié le présent extrait conforme aux indications contenues dans le registre.
-        </div>
+                <div class="sig-zone">
+                    <div class="sig-title">L'Officier de l'Etat civil</div>
 
-        {{-- ── Footer ── --}}
-        <div class="footer-doc">
-            <div class="lieu-date">
-                Délivré, le {{ $dateAuj }}
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                à {{ $communeNom }}
+                    @if(file_exists(public_path('storage/img/signature.png')))
+                        <img src="{{ asset('storage/img/signature.png') }}"
+                             style="width:45mm; height:24mm; object-fit:contain;">
+                    @else
+                        <div class="sig-image-box">(Signature)</div>
+                    @endif
+
+                    <span class="sig-label">(Signature)</span>
+                </div>
+
+                
+
+                <div class="ref-doc">{{ $refDoc }}</div>
+
             </div>
-            <div class="officier">L'Officier de l'Etat Civil</div>
-            <div class="sig">(signature)</div>
-            <div style="margin-top:6px; width:50px; height:50px; border:1px solid #ccc;"></div>
-        </div>
 
-        {{-- QR factice ── --}}
-        <div class="qr-zone">
-            <div style="width:50px; height:50px; border:2px solid #000; display:flex; align-items:center; justify-content:center; font-size:7px; color:#aaa;">QR</div>
-        </div>
+        </div>{{-- /footer-zone --}}
 
-    </div>
-</div>
+    </div>{{-- /content --}}
+</div>{{-- /page --}}
+
 </body>
 </html>

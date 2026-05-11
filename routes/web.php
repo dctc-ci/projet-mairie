@@ -35,7 +35,7 @@ use App\Http\Controllers\Personnels\{
 
 Route::get('/', function () {
     return Auth::check()
-        ? view('welcome')
+        ? view('dashboard')
         : redirect()->route('login');
 });
 
