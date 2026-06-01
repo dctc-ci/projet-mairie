@@ -1202,7 +1202,7 @@
                                         @foreach ([
                                         'indem_transp' => 'Transport',
                                         'indem_fonction' => 'Fonction',
-                                        'indem_techn' => 'Technique',
+                                        'indem_techn' => 'Technicité',
                                         ] as $field => $label)
                                         <div>
                                             <label

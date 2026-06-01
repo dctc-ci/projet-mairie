@@ -308,54 +308,121 @@ default => $etat,
 
                         {{-- ── Recherche matricule ── --}}
                         @if(! $fiche_found || ! $editMode)
-                        <div class="p-4 bg-navy/4 border border-navy/10 rounded-xl">
-                            <p
-                                class="text-xs font-semibold text-navy/70 uppercase tracking-wide mb-3 flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                </svg>
-                                Rechercher un agent permanent par matricule
-                            </p>
-                            <div class="flex gap-2">
-                                <input type="text" wire:model="fiche_matricule_search"
-                                    wire:keydown.enter="searchFicheAgent" placeholder="ex : MAT-2025-001"
-                                    class="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl
-                                              text-sm text-navy placeholder-gray-400 font-mono
-                                              focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy/40 transition-all">
-                                <button wire:click="searchFicheAgent" wire:loading.attr="disabled"
-                                    wire:target="searchFicheAgent" class="flex items-center gap-2 px-4 py-2.5 bg-navy text-white text-sm font-semibold rounded-xl
-                                               hover:bg-[#0f2d56] transition-colors disabled:opacity-60">
-                                    <span wire:loading.remove wire:target="searchFicheAgent">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                        </svg>
-                                    </span>
-                                    <span wire:loading wire:target="searchFicheAgent">
-                                        <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                                        </svg>
-                                    </span>
-                                </button>
-                            </div>
-                            @if($fiche_search_error)
-                            <p class="mt-2 text-xs text-red-500 flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374l7.52-13.02c.866-1.5 3.032-1.5 3.898 0l4.942 8.567ZM12 15.75h.007v.008H12v-.008Z" />
-                                </svg>
-                                {{ $fiche_search_error }}
-                            </p>
-                            @endif
-                        </div>
-                        @endif
+<div class="p-4 bg-navy/4 border border-navy/10 rounded-xl space-y-4">
+
+    {{-- Sélecteur type de personnel --}}
+    <div>
+        <p class="text-xs font-semibold text-navy/70 uppercase tracking-wide mb-2">
+            Type de personnel
+        </p>
+        <div class="flex gap-2">
+            @foreach([
+                'agent'         => 'Agent permanent',
+                'non_permanent' => 'Non permanent',
+                'stagiaire'     => 'Stagiaire',
+            ] as $val => $label)
+            <button type="button"
+                    wire:click="$set('fiche_type_personnel', '{{ $val }}')"
+                    class="flex-1 py-2 text-xs font-semibold rounded-xl border transition-all
+                           {{ $fiche_type_personnel === $val
+                               ? 'bg-navy text-white border-navy'
+                               : 'bg-white text-gray-600 border-gray-200 hover:border-navy/30' }}">
+                {{ $label }}
+            </button>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Champ de recherche dynamique --}}
+    <div>
+        <p class="text-xs font-semibold text-navy/70 uppercase tracking-wide mb-2 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+            </svg>
+            @if($fiche_type_personnel === 'agent')
+                Rechercher par matricule
+            @else
+                Rechercher par nom et prénom
+            @endif
+        </p>
+
+        <div class="flex gap-2">
+            <input type="text"
+                   wire:model="fiche_matricule_search"
+                   wire:keydown.enter="searchFicheAgent"
+                   placeholder="{{ $fiche_type_personnel === 'agent' ? 'ex : MAT-2025-001' : 'ex : KONÉ Amadou' }}"
+                   class="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl
+                          text-sm text-navy placeholder-gray-400
+                          {{ $fiche_type_personnel === 'agent' ? 'font-mono' : '' }}
+                          focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy/40 transition-all">
+
+            <button wire:click="searchFicheAgent"
+                    wire:loading.attr="disabled"
+                    wire:target="searchFicheAgent"
+                    class="flex items-center gap-2 px-4 py-2.5 bg-navy text-white text-sm font-semibold rounded-xl
+                           hover:bg-[#0f2d56] transition-colors disabled:opacity-60">
+                <span wire:loading.remove wire:target="searchFicheAgent">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                    </svg>
+                </span>
+                <span wire:loading wire:target="searchFicheAgent">
+                    <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                </span>
+            </button>
+        </div>
+
+        {{-- Erreur --}}
+        @if($fiche_search_error)
+        <p class="mt-2 text-xs text-red-500 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374l7.52-13.02c.866-1.5 3.032-1.5 3.898 0l4.942 8.567ZM12 15.75h.007v.008H12v-.008Z"/>
+            </svg>
+            {{ $fiche_search_error }}
+        </p>
+        @endif
+
+        {{-- Résultat trouvé --}}
+        @if($fiche_found)
+        <div class="mt-3 flex items-center gap-3 p-3 bg-green/8 border border-green/20 rounded-xl">
+            <div class="w-8 h-8 rounded-full bg-green/15 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[10px] text-green font-semibold uppercase tracking-wide">Trouvé</p>
+                <p class="text-sm font-semibold text-navy truncate">{{ $fiche_personnel_nom }}</p>
+                <p class="text-[10px] text-gray-400 mt-0.5">
+                    @if($fiche_type_personnel === 'agent') Agent permanent
+                    @elseif($fiche_type_personnel === 'non_permanent') Agent non permanent
+                    @else Stagiaire
+                    @endif
+                </p>
+            </div>
+            {{-- Bouton imprimer direct --}}
+            <button wire:click="imprimerFiche"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5
+                           bg-navy text-white text-[11px] font-semibold rounded-xl
+                           hover:bg-[#0f2d56] transition-colors shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"/>
+                </svg>
+                Imprimer la fiche
+            </button>
+        </div>
+        @endif
+    </div>
+
+</div>
+@endif
 
                         {{-- ── Liste des sollicitations ── --}}
                         @if($fiche_found && ! $editMode)
@@ -414,23 +481,15 @@ default => $etat,
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-2 shrink-0">
-                                        <button wire:click="editSollicitation({{ $s->id }})"
-                                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-navy/8 text-navy hover:bg-navy/15 transition-colors">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                stroke-width="2">
+                                    <div class="shrink-0">
+                                        <button wire:click="imprimerSollicitation({{ $s->id }})"
+                                            title="Imprimer le document PDF" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-navy/8 text-navy text-[11px] font-semibold rounded-xl hover:bg-navy/15 transition-colors">
+                                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" stroke-width="1.5">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
+                                                    d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
                                             </svg>
-                                        </button>
-                                        <button wire:click="deleteSollicitation({{ $s->id }})"
-                                            wire:confirm="Supprimer cette sollicitation ?"
-                                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                            </svg>
+                                            Imprimer
                                         </button>
                                     </div>
                                 </div>

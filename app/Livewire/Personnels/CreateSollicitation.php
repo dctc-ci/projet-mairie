@@ -104,6 +104,7 @@ class CreateSollicitation extends Component
     // MODAL FICHE
     // ═══════════════════════════════════════════════════════
 
+    public string $fiche_type_personnel   = 'agent';   // ← AJOUTER cette ligne
     public string $fiche_matricule_search = '';
     public string $fiche_personnel_nom    = '';
     public ?int   $fiche_agent_id         = null;
@@ -111,6 +112,7 @@ class CreateSollicitation extends Component
     public ?int   $fiche_stagiaire_id     = null;
     public string $fiche_search_error     = '';
     public bool   $fiche_found            = false;
+    public string $fiche_personnel_id     = '';
 
     // ═══════════════════════════════════════════════════════
     // HOOKS — CALCUL AUTOMATIQUE DES JOURS
@@ -219,7 +221,7 @@ class CreateSollicitation extends Component
     }
 
     /**
-     * ✅ FIX : bouton "→" de la table principale
+     *  FIX : bouton "→" de la table principale
      * Un seul wire:click="openFicheFromTable(id)" — plus de doublons.
      * Ouvre la fiche de l'agent lié et pré-sélectionne la sollicitation en édition.
      */
@@ -249,18 +251,20 @@ class CreateSollicitation extends Component
     }
 
     private function resetFiche(): void
-    {
-        $this->fiche_matricule_search = '';
-        $this->fiche_personnel_nom    = '';
-        $this->fiche_agent_id         = null;
-        $this->fiche_non_perm_id      = null;
-        $this->fiche_stagiaire_id     = null;
-        $this->fiche_search_error     = '';
-        $this->fiche_found            = false;
-        $this->selectedId             = null;
-        $this->editMode               = false;
-        $this->resetErrorBag();
-    }
+{
+    $this->fiche_type_personnel   = 'agent';  // ← AJOUTER
+    $this->fiche_matricule_search = '';
+    $this->fiche_personnel_nom    = '';
+    $this->fiche_personnel_id     = '';       // ← AJOUTER
+    $this->fiche_agent_id         = null;
+    $this->fiche_non_perm_id      = null;
+    $this->fiche_stagiaire_id     = null;
+    $this->fiche_search_error     = '';
+    $this->fiche_found            = false;
+    $this->selectedId             = null;
+    $this->editMode               = false;
+    $this->resetErrorBag();
+}
 
     public function closeFicheModal(): void
     {
@@ -269,32 +273,63 @@ class CreateSollicitation extends Component
     }
 
     public function searchFicheAgent(): void
-    {
-        $this->fiche_search_error  = '';
-        $this->fiche_found         = false;
-        $this->fiche_personnel_nom = '';
-        $this->fiche_agent_id      = null;
-        $this->fiche_non_perm_id   = null;
-        $this->fiche_stagiaire_id  = null;
-        $this->editMode            = false;
-        $this->selectedId          = null;
+{
+    $this->fiche_search_error  = '';
+    $this->fiche_found         = false;
+    $this->fiche_personnel_nom = '';
+    $this->fiche_agent_id      = null;
+    $this->fiche_non_perm_id   = null;
+    $this->fiche_stagiaire_id  = null;
+    $this->fiche_personnel_id  = '';
 
-        $matricule = strtoupper(trim($this->fiche_matricule_search));
-        if (empty($matricule)) {
-            $this->fiche_search_error = 'Veuillez saisir un matricule.';
-            return;
-        }
+    $search = trim($this->fiche_matricule_search);
 
-        $agent = Agent::where('matricule', $matricule)->first();
-        if (! $agent) {
-            $this->fiche_search_error = "Aucun agent trouvé avec le matricule « {$matricule} ».";
-            return;
-        }
-
-        $this->fiche_agent_id      = $agent->id;
-        $this->fiche_personnel_nom = $agent->nom_prenom_agent;
-        $this->fiche_found         = true;
+    if (empty($search)) {
+        $this->fiche_search_error = 'Veuillez saisir un matricule ou un nom.';
+        return;
     }
+
+    match ($this->fiche_type_personnel) {
+
+        'agent' => (function () use ($search) {
+            $agent = Agent::where('matricule', strtoupper($search))->first();
+            if (! $agent) {
+                $this->fiche_search_error = "Aucun agent permanent avec le matricule « {$search} ».";
+                return;
+            }
+            $this->fiche_agent_id      = $agent->id;
+            $this->fiche_personnel_id  = (string) $agent->id;
+            $this->fiche_personnel_nom = $agent->nom_prenom_agent;
+            $this->fiche_found         = true;
+        })(),
+
+        'non_permanent' => (function () use ($search) {
+            $agent = AgentNonPermanent::whereRaw('UPPER(nom_prenom_nopermanent) LIKE ?', ['%' . strtoupper($search) . '%'])->first();
+            if (! $agent) {
+                $this->fiche_search_error = "Aucun agent non permanent trouvé pour « {$search} ».";
+                return;
+            }
+            $this->fiche_non_perm_id   = $agent->id;
+            $this->fiche_personnel_id  = (string) $agent->id;
+            $this->fiche_personnel_nom = $agent->nom_prenom_nopermanent;
+            $this->fiche_found         = true;
+        })(),
+
+        'stagiaire' => (function () use ($search) {
+            $stagiaire = Stagiaire::whereRaw('UPPER(nom_prenom_stagiaire) LIKE ?', ['%' . strtoupper($search) . '%'])->first();
+            if (! $stagiaire) {
+                $this->fiche_search_error = "Aucun stagiaire trouvé pour « {$search} ».";
+                return;
+            }
+            $this->fiche_stagiaire_id  = $stagiaire->id;
+            $this->fiche_personnel_id  = (string) $stagiaire->id;
+            $this->fiche_personnel_nom = $stagiaire->nom_prenom_stagiaire;
+            $this->fiche_found         = true;
+        })(),
+
+        default => $this->fiche_search_error = 'Type de personnel invalide.',
+    };
+}
 
     // Computed : sollicitations selon le contexte fiche
     public function getSollicitationsAgentProperty(): \Illuminate\Support\Collection
