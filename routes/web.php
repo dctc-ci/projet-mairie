@@ -7,6 +7,7 @@ use App\Models\ModuleSetting;
 
 use App\Models\Personnel\Stagiaire;
 use App\Models\Personnel\BulletinSalaire;
+use App\Models\Personnel\Commune;
 use App\Models\EtatCivil\Extrait;
 
 use App\Http\Controllers\Personnels\{
@@ -125,11 +126,15 @@ Route::middleware([
     })->middleware('module.enabled:'.ModuleSetting::PERSONNELS)->name('stagiaires.print.fiche');
 
     Route::get('/stagiaires/{stagiaire}/demarrage', function (Stagiaire $stagiaire) {
-        return view('pdf.stagiaire-demarrage', compact('stagiaire'));
+        $communeNom = Commune::query()->orderBy('id')->value('nom_commune') ?? '________________';
+
+        return view('pdf.stagiaire-demarrage', compact('stagiaire', 'communeNom'));
     })->middleware('module.enabled:'.ModuleSetting::PERSONNELS)->name('stagiaires.print.demarrage');
 
     Route::get('/stagiaires/{stagiaire}/fin', function (Stagiaire $stagiaire) {
-        return view('pdf.stagiaire-fin', compact('stagiaire'));
+        $communeNom = Commune::query()->orderBy('id')->value('nom_commune') ?? '________________';
+
+        return view('pdf.stagiaire-fin', compact('stagiaire', 'communeNom'));
     })->middleware('module.enabled:'.ModuleSetting::PERSONNELS)->name('stagiaires.print.fin');
 
 

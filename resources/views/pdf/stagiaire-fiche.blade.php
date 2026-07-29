@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Fiche Stagiaire — {{ $stagiaire->nom_prenom_stagiaire }}</title>
+    <title>Fiche Stagiaire - {{ $stagiaire->nom_prenom_stagiaire }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 

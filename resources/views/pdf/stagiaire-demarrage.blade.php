@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Attestation de Démarrage — {{ $stagiaire->nom_prenom_stagiaire }}</title>
+    <title>Attestation de Démarrage - {{ $stagiaire->nom_prenom_stagiaire }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -211,6 +211,9 @@
         ? \Carbon\Carbon::parse($stagiaire->date_fin)->locale('fr')->isoFormat('DD MMMM YYYY')
         : '_______________';
     $f = fn($v) => $v ?: '_______________';
+
+     /* ── Ref document ── */
+    $refDoc = strtolower(str_replace(' ', '', $communeNom)) . '.js' . date('dmY') . ($stagiaire->id ?? '');
 @endphp
 
 <div class="page">
@@ -218,8 +221,8 @@
     {{-- ── En-tête ── --}}
     <div class="header">
         <div class="header-left">
-            <div class="dept">DEPARTEMENT DE KOUASSI-KOUASSIKRO</div>
-            <div class="commune">COMMUNE DE KOUASSI-KOUASSIKRO</div>
+            <div class="dept">DEPARTEMENT DE {{ strtoupper($communeNom) }}</div>
+            <div class="commune">COMMUNE DE {{ strtoupper($communeNom) }}</div>
             <div class="logo-zone">
                 @if(file_exists(public_path('storage/img/logo-mairie.png')))
                     <img src="{{ asset('storage/img/logo-mairie.png') }}" alt="Logo">
@@ -262,7 +265,7 @@
 
     {{-- ── Bloc attestation ── --}}
     <div class="attestation-header">
-        LE MAIRE DE LA COMMUNE DE KOUASSI-KOUASSIKRO ATTESTE QUE
+        LE MAIRE DE LA COMMUNE DE {{ strtoupper($communeNom) }} ATTESTE QUE
     </div>
 
     {{-- ── Corps ── --}}
@@ -302,7 +305,7 @@
 
     {{-- ── Footer ── --}}
     <div class="footer">
-        <div class="lieu-date">Kouassi-Kouassikro, le {{ $dateAuj }}</div>
+        <div class="lieu-date">{{ $communeNom }}, le {{ $dateAuj }}</div>
         <div class="signataire">P/Le Maire et PD</div>
     </div>
 
