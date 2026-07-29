@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ModuleController;
+use App\Models\ModuleSetting;
 
 use App\Models\Personnel\Stagiaire;
 use App\Models\Personnel\BulletinSalaire;
@@ -35,7 +37,7 @@ use App\Http\Controllers\Personnels\{
 
 Route::get('/', function () {
     return Auth::check()
-        ? view('dashboard')
+        ? app(ModuleController::class)->dashboard()
         : redirect()->route('login');
 });
 
@@ -52,14 +54,15 @@ Route::middleware([
 ])->group(function () {
 
     // Dashboard général
-    Route::get('/bienvenu', fn() => view('dashboard'))->name('bienvenu');
+    Route::get('/bienvenu', [ModuleController::class, 'dashboard'])->name('bienvenu');
+    Route::put('/modules', [ModuleController::class, 'update'])->name('modules.update');
 
     /*
     |--------------------------------------------------------------------------
     | PERSONNELS 
     |--------------------------------------------------------------------------
     */
-    Route::prefix('personnels')->name('personnels.')->group(function () {
+    Route::prefix('personnels')->name('personnels.')->middleware('module.enabled:'.ModuleSetting::PERSONNELS)->group(function () {
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -95,7 +98,7 @@ Route::middleware([
     | ETAT CIVILS
     |--------------------------------------------------------------------------
     */
-    Route::prefix('etatcivils')->name('etatcivils.')->group(function () {
+    Route::prefix('etatcivils')->name('etatcivils.')->middleware('module.enabled:'.ModuleSetting::ETAT_CIVIL)->group(function () {
 
     Route::get('/dashboard',  [EtatCivilDashboard::class, 'index'])->name('dashboard');
     Route::get('/naissances', [ExtraitController::class, 'index'])->name('naissances');
@@ -115,23 +118,23 @@ Route::middleware([
     Route::get('/bulletins/{bulletin}/print', function (BulletinSalaire $bulletin) {
         $bulletin->load(['agent.baremeSalarial', 'agent.commune']);
         return view('pdf.bulletin-salaire-print', compact('bulletin'));
-    })->name('bulletins.print');
+    })->middleware('module.enabled:'.ModuleSetting::PERSONNELS)->name('bulletins.print');
 
     Route::get('/stagiaires/{stagiaire}/fiche', function (Stagiaire $stagiaire) {
         return view('pdf.stagiaire-fiche', compact('stagiaire'));
-    })->name('stagiaires.print.fiche');
+    })->middleware('module.enabled:'.ModuleSetting::PERSONNELS)->name('stagiaires.print.fiche');
 
     Route::get('/stagiaires/{stagiaire}/demarrage', function (Stagiaire $stagiaire) {
         return view('pdf.stagiaire-demarrage', compact('stagiaire'));
-    })->name('stagiaires.print.demarrage');
+    })->middleware('module.enabled:'.ModuleSetting::PERSONNELS)->name('stagiaires.print.demarrage');
 
     Route::get('/stagiaires/{stagiaire}/fin', function (Stagiaire $stagiaire) {
         return view('pdf.stagiaire-fin', compact('stagiaire'));
-    })->name('stagiaires.print.fin');
+    })->middleware('module.enabled:'.ModuleSetting::PERSONNELS)->name('stagiaires.print.fin');
 
 
 
-Route::prefix('naissances')->name('naissances.print.')->middleware('auth')->group(function () {
+Route::prefix('naissances')->name('naissances.print.')->middleware(['auth', 'module.enabled:'.ModuleSetting::ETAT_CIVIL])->group(function () {
 
     Route::get('/{extrait}/extrait', function (Extrait $extrait) {
         $extrait->load(['commune', 'mentions']);

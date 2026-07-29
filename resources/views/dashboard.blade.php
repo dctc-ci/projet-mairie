@@ -99,7 +99,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 {{-- ── Card Personnel ── --}}
-                <a href="{{ route('personnels.dashboard') }}" class="group bg-white rounded-2xl overflow-hidden flex flex-col no-underline relative transition-all duration-300 shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.05)] hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(11,31,58,0.15),0_0_0_1px_rgba(11,31,58,0.06)] cursor-pointer animate-card-in [animation-delay:50ms]">
+                <a href="{{ route('personnels.dashboard') }}" @class(['hidden' => ! $modules['personnels'], 'group bg-white rounded-2xl overflow-hidden flex flex-col no-underline relative transition-all duration-300 shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.06)] cursor-pointer animate-card-in [animation-delay:50ms]'])>
                     <div class="h-[5px] w-full bg-gradient-to-r from-navy to-[#1a3a6b]"></div>
                     <div class="p-7 flex-1 flex flex-col">
                         <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-5 bg-[rgba(11,31,58,0.07)] text-navy">
@@ -126,7 +126,7 @@
                 </a>
 
                 {{-- ── Card État Civil ── --}}
-                <a href="{{ route('etatcivils.dashboard') }}" class="group bg-white rounded-2xl overflow-hidden flex flex-col no-underline relative transition-all duration-300 shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.05)] hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(11,31,58,0.15),0_0_0_1px_rgba(11,31,58,0.06)] cursor-pointer animate-card-in [animation-delay:50ms]">
+                <a href="{{ route('etatcivils.dashboard') }}" @class(['hidden' => ! $modules['etat-civil'], 'group bg-white rounded-2xl overflow-hidden flex flex-col no-underline relative transition-all duration-300 shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.06)] cursor-pointer animate-card-in [animation-delay:50ms]'])>
                     <div class="h-[5px] w-full bg-gradient-to-r from-green to-[#2d9b5a]"></div>
                     <div class="p-7 flex-1 flex flex-col">
                         <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-5 bg-[rgba(11,31,58,0.07)] text-navy">
@@ -153,7 +153,7 @@
                 </a>
 
                 {{-- ── Card Prestations ── --}}
-                <div class="bg-white rounded-2xl overflow-hidden flex flex-col relative shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.05)] cursor-default animate-card-in [animation-delay:250ms]">
+                <div @class(['hidden' => ! $modules['prestations'], 'bg-white rounded-2xl overflow-hidden flex flex-col relative shadow-[0_2px_8px_rgba(11,31,58,0.07),0_0_0_1px_rgba(11,31,58,0.05)] cursor-default animate-card-in [animation-delay:250ms]'])>
                     <div class="h-[5px] w-full bg-gradient-to-r from-orange to-gold"></div>
                     <span class="absolute top-4 right-4 bg-gray-100 text-gray-400 text-[0.65rem] font-medium tracking-widest uppercase py-1 px-2.5 rounded-full">Bientôt disponible</span>
                     <div class="p-7 flex-1 flex flex-col">
@@ -184,6 +184,33 @@
         </div>
 
         {{-- ══ FOOTER ══ --}}
+        @if(Auth::user()?->role === 'superadmin')
+            <div class="max-w-[1100px] w-full mx-auto px-4 md:px-6 pb-10">
+                <form method="POST" action="{{ route('modules.update') }}" class="bg-white rounded-2xl p-6 shadow-[0_2px_8px_rgba(11,31,58,0.07)]">
+                    @csrf
+                    @method('PUT')
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h2 class="font-serif text-xl font-bold text-navy">Modules affichés</h2>
+                            <p class="text-sm text-gray-500 mt-1">Désactiver un module masque sa carte et bloque toutes ses routes.</p>
+                        </div>
+                        <button type="submit" class="bg-navy text-white px-5 py-2.5 rounded-lg text-sm font-medium">Enregistrer</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+                        @foreach(['personnels' => 'Personnel', 'etat-civil' => 'État civil', 'prestations' => 'Prestations'] as $key => $label)
+                            <label class="flex items-center justify-between border border-gray-200 rounded-lg px-4 py-3 cursor-pointer">
+                                <span class="font-medium text-navy">{{ $label }}</span>
+                                <input type="checkbox" name="modules[]" value="{{ $key }}" @checked($modules[$key]) class="rounded border-gray-300 text-navy focus:ring-navy">
+                            </label>
+                        @endforeach
+                    </div>
+                    @if(session('success'))
+                        <p class="text-sm text-green mt-4">{{ session('success') }}</p>
+                    @endif
+                </form>
+            </div>
+        @endif
+
         <div class="text-center py-4 px-6 text-xs text-gray-400 tracking-wide pb-8 mt-auto">
             &copy; {{ date('Y') }} Mairie de Cocody &mdash; Tous droits réservés &mdash; République de Côte d'Ivoire
         </div>
