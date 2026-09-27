@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureModuleIsEnabled;
+use App\Http\Middleware\EnsurePersonnelAccess;
+use App\Http\Middleware\EnsureSessionIsActive;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,8 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'module.enabled' => \App\Http\Middleware\EnsureModuleIsEnabled::class,
+            'module.enabled' => EnsureModuleIsEnabled::class,
+            'personnels.access' => EnsurePersonnelAccess::class,
         ]);
+
+        $middleware->web(append: [EnsureSessionIsActive::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

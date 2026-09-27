@@ -15,6 +15,7 @@
                     <h1 class="font-serif text-2xl font-bold leading-tight">Liste des stagiaires</h1>
                     <p class="text-white/60 text-sm mt-1">Retrouvez ici tous les stagiaires de la mairie.</p>
                 </div>
+                @if($this->canManagePersonnel)
                 <div class="shrink-0">
                     <button wire:click="openModal"
                             class="inline-flex items-center gap-2 px-5 py-2.5
@@ -26,6 +27,7 @@
                         Ajouter un stagiaire
                     </button>
                 </div>
+                @endif
             </div>
             <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full border-[28px] border-white/5 pointer-events-none"></div>
             <div class="absolute right-16 -bottom-8 w-28 h-28 rounded-full border-[14px] border-white/5 pointer-events-none"></div>
@@ -470,6 +472,7 @@
                 <div class="px-6 py-4 border-t border-gray-100 bg-white flex items-center justify-between gap-3 flex-wrap">
 
     {{-- Gauche : Supprimer --}}
+    @if($this->canManagePersonnel)
     <button wire:click="confirmDelete"
             wire:confirm="Êtes-vous sûr de vouloir supprimer ce stagiaire ? Cette action est irréversible."
             class="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 text-sm font-semibold
@@ -479,6 +482,7 @@
         </svg>
         Supprimer
     </button>
+    @endif
 
     {{-- Droite : 3 boutons impression + Modifier/Enregistrer --}}
     <div class="flex items-center gap-2 flex-wrap">
@@ -545,6 +549,7 @@
                 </span>
             </button>
         @else
+            @if($this->canManagePersonnel)
             <button wire:click="enableEditMode"
                     class="flex items-center gap-2 px-5 py-2.5 bg-navy text-white text-sm font-semibold
                            rounded-xl hover:bg-[#0f2d56] transition-colors shadow-sm shadow-navy/20">
@@ -553,6 +558,7 @@
                 </svg>
                 Modifier
             </button>
+            @endif
         @endif
     </div>
 

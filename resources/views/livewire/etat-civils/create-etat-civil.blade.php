@@ -1,8 +1,12 @@
 @php
-    function sexeBadge(string $s): string {
-        return $s === 'M'
-            ? 'bg-blue-50 text-blue-600 border border-blue-100'
-            : 'bg-pink-50 text-pink-600 border border-pink-100';
+    // Garde function_exists : la vue peut être rendue plusieurs fois dans la même requête.
+    if (! function_exists('sexeBadge')) {
+        function sexeBadge(string $s): string
+        {
+            return $s === 'M'
+                ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                : 'bg-pink-50 text-pink-600 border border-pink-100';
+        }
     }
 @endphp
 

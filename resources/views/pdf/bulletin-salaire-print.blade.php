@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bulletin de Salaire — {{ $bulletin->agent?->nom_prenom_agent }}</title>
+    <title>Bulletin de Salaire - {{ $bulletin->agent?->nom_prenom_agent }}</title>
     <style>
     * {
         margin: 0;

@@ -15,6 +15,7 @@
                     <h1 class="font-serif text-2xl font-bold leading-tight">Bulletins de salaire</h1>
                     <p class="text-white/60 text-sm mt-1">Générez et gérez les bulletins mensuels des agents.</p>
                 </div>
+                @if($this->canManagePersonnel)
                 <div class="shrink-0">
                     <button wire:click="openModal"
                             class="inline-flex items-center gap-2 px-5 py-2.5
@@ -26,6 +27,7 @@
                         Nouveau bulletin
                     </button>
                 </div>
+                @endif
             </div>
             <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full border-[28px] border-white/5 pointer-events-none"></div>
             <div class="absolute right-16 -bottom-8 w-28 h-28 rounded-full border-[14px] border-white/5 pointer-events-none"></div>
@@ -141,6 +143,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
                                 </svg>
                                 <p class="text-gray-400 text-sm">Aucun bulletin enregistré.</p>
+                                @if($this->canManagePersonnel)
                                 <button wire:click="openModal"
                                         class="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-navy hover:text-gold transition-colors">
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -148,6 +151,7 @@
                                     </svg>
                                     Créer le premier bulletin
                                 </button>
+                                @endif
                             </td>
                         </tr>
                         @endforelse
@@ -332,6 +336,7 @@
                 {{-- Footer --}}
                 <div class="px-6 py-4 border-t border-gray-100 bg-white flex items-center justify-between gap-3">
 
+                    @if($this->canManagePersonnel)
                     <button wire:click="confirmDelete"
                             wire:confirm="Supprimer ce bulletin ?"
                             class="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 text-sm font-semibold
@@ -341,6 +346,7 @@
                         </svg>
                         Supprimer
                     </button>
+                    @endif
 
                     <div class="flex items-center gap-2">
 
@@ -384,6 +390,7 @@
                                 </span>
                             </button>
                         @else
+                            @if($this->canManagePersonnel)
                             <button wire:click="enableEditMode"
                                     class="flex items-center gap-2 px-5 py-2.5 bg-navy text-white text-sm font-semibold
                                            rounded-xl hover:bg-[#0f2d56] transition-colors shadow-sm shadow-navy/20">
@@ -392,6 +399,7 @@
                                 </svg>
                                 Modifier
                             </button>
+                            @endif
                         @endif
                     </div>
                 </div>

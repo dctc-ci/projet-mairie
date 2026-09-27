@@ -38,6 +38,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Idle Timeout
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the number of minutes of inactivity after which
+    | authenticated users are logged out, even if their session cookie is
+    | still valid. This also drives the client-side logout timer.
+    |
+    */
+
+    'idle_timeout' => (int) env('SESSION_IDLE_TIMEOUT', 5),
+
+    /*
+    |--------------------------------------------------------------------------
     | Session Encryption
     |--------------------------------------------------------------------------
     |

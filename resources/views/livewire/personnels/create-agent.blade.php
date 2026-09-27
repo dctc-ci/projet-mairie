@@ -23,6 +23,7 @@
                 </div>
 
                 {{-- Bouton Ajouter — utilise wire:click pour éviter de perdre l'état Alpine --}}
+                @if($this->canManagePersonnel)
                 <div class="shrink-0">
                     <button wire:click="openModal" class="inline-flex items-center gap-2 px-5 py-2.5
                                    bg-gold text-navy text-sm font-semibold rounded-xl
@@ -33,6 +34,7 @@
                         Ajouter un agent
                     </button>
                 </div>
+                @endif
             </div>
             {{-- Déco --}}
             <div
@@ -553,10 +555,11 @@
                 </div>
             </div>
 
-            {{-- ── Footer avec actions ── --}}
+            @if($this->canManagePersonnel)
+            {{-- ── Footer avec actions (masqué pour les rôles sans droits d'édition) ── --}}
             <div class="px-6 py-4 border-t border-gray-100 bg-white flex items-center justify-between gap-3">
 
-                {{-- Bouton Supprimer (toujours visible) --}}
+                {{-- Bouton Supprimer --}}
                 <button wire:click="confirmDelete"
                         wire:confirm="Êtes-vous sûr de vouloir supprimer cet agent ? Cette action est irréversible."
                         class="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 text-sm font-semibold
@@ -610,6 +613,7 @@
                 </div>
 
             </div>
+            @endif
 
         </div>
     </div>

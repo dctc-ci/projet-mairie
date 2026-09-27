@@ -3,9 +3,9 @@
 namespace App\Models\Personnel;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AgentNonPermanent extends Model
 {
@@ -17,6 +17,11 @@ class AgentNonPermanent extends Model
         'commune_id',
         'nom_prenom_nopermanent',
         'sexe_nopermanent',
+        'date_naissance_nopermanent',
+        'type_piece_agentnopermanent',
+        'numero_piece_agentnopermanent',
+        'date_piece_etabli_agentnopermanent',
+        'numero_cnps_agentnopermanent',
         'fonction_nopermanent',
         'service_nopermanent',
         'statut_nopermanent',
@@ -33,7 +38,9 @@ class AgentNonPermanent extends Model
 
     protected $casts = [
         'date_recrutement_nopermanent' => 'date',
-        'indemnite'                    => 'decimal:2',
+        'date_naissance_nopermanent' => 'date',
+        'date_piece_etabli_agentnopermanent' => 'date',
+        'indemnite' => 'decimal:2',
     ];
 
     // ─── Relations ───────────────────────────────────────────

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('agent_id')->nullable()->constrained('agents')->nullOnDelete();
             $table->foreignId('agent_non_permanent_id')->nullable()->constrained('agents_non_permanents')->nullOnDelete();
             $table->foreignId('stagiaire_id')->nullable()->constrained('stagiaires')->nullOnDelete();
-            $table->foreignId('type_sollicitation_id')->nullable()->constrained('types_sollicitation')->nullOnDelete();
+            $table->foreignId('type_sollicitation_id')->nullable()->constrained('type_sollicitations')->nullOnDelete();
 
             // Informations générales
             $table->string('motif_sollicitation', 255)->nullable();
@@ -39,7 +39,7 @@ return new class extends Migration
 
             // Statut
             $table->enum('etat_sollicitation', ['en_attente', 'approuvee', 'rejetee', 'annulee'])
-                  ->default('en_attente');
+                ->default('en_attente');
 
             // Accident de travail
             $table->date('date_accident')->nullable();

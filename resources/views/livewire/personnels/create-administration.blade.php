@@ -15,6 +15,7 @@
                     <h1 class="font-serif text-2xl font-bold leading-tight">Administration</h1>
                     <p class="text-white/60 text-sm mt-1">Gérez les comptes utilisateurs et leurs accès.</p>
                 </div>
+                @if($this->canManagePersonnel)
                 <div class="shrink-0">
                     <button wire:click="openModal" class="inline-flex items-center gap-2 px-5 py-2.5
                                    bg-gold text-navy text-sm font-semibold rounded-xl
@@ -25,6 +26,7 @@
                         Nouvel utilisateur
                     </button>
                 </div>
+                @endif
             </div>
             {{-- Déco --}}
             <div
@@ -396,7 +398,8 @@
 
                 </div>
 
-                {{-- Footer --}}
+                {{-- Footer (masqué pour les rôles sans droits d'édition) --}}
+                @if($this->canManagePersonnel)
                 <div class="px-6 py-4 border-t border-gray-100 bg-white flex items-center justify-between gap-3">
 
                     {{-- Supprimer (désactivé pour son propre compte) --}}
@@ -457,6 +460,7 @@
                     </div>
 
                 </div>
+                @endif
 
             </div>
         </div>

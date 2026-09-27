@@ -15,6 +15,7 @@
                     <h1 class="font-serif text-2xl font-bold leading-tight">Barème salarial</h1>
                     <p class="text-white/60 text-sm mt-1">Gérez les catégories, échelons et grilles de salaires.</p>
                 </div>
+                @if($this->canManagePersonnel)
                 <div class="shrink-0">
                     <button wire:click="openModal"
                             class="inline-flex items-center gap-2 px-5 py-2.5
@@ -26,6 +27,7 @@
                         Ajouter un barème
                     </button>
                 </div>
+                @endif
             </div>
             <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full border-[28px] border-white/5 pointer-events-none"></div>
             <div class="absolute right-16 -bottom-8 w-28 h-28 rounded-full border-[14px] border-white/5 pointer-events-none"></div>
@@ -155,6 +157,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                 </svg>
                                 <p class="text-gray-400 text-sm">Aucun barème enregistré.</p>
+                                @if($this->canManagePersonnel)
                                 <button wire:click="openModal"
                                         class="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-navy hover:text-gold transition-colors">
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -162,6 +165,7 @@
                                     </svg>
                                     Créer le premier barème
                                 </button>
+                                @endif
                             </td>
                         </tr>
                         @endforelse
@@ -328,7 +332,8 @@
 
                 </div>
 
-                {{-- Footer --}}
+                {{-- Footer (masqué pour les rôles sans droits d'édition) --}}
+                @if($this->canManagePersonnel)
                 <div class="px-6 py-4 border-t border-gray-100 bg-white flex items-center justify-between gap-3">
                     <button wire:click="confirmDelete"
                             wire:confirm="Êtes-vous sûr de vouloir supprimer ce barème ? Les agents rattachés ne pourront pas être supprimés."
@@ -378,6 +383,7 @@
                         @endif
                     </div>
                 </div>
+                @endif
 
             </div>
         </div>

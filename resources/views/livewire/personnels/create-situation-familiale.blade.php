@@ -15,6 +15,7 @@
                     <h1 class="font-serif text-2xl font-bold leading-tight">Situations familiales</h1>
                     <p class="text-white/60 text-sm mt-1">Gérez les données familiales des agents permanents.</p>
                 </div>
+                @if($this->canManagePersonnel)
                 <div class="shrink-0">
                     <button wire:click="openModal"
                             class="inline-flex items-center gap-2 px-5 py-2.5
@@ -26,6 +27,7 @@
                         Ajouter une fiche
                     </button>
                 </div>
+                @endif
             </div>
             <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full border-[28px] border-white/5 pointer-events-none"></div>
             <div class="absolute right-16 -bottom-8 w-28 h-28 rounded-full border-[14px] border-white/5 pointer-events-none"></div>
@@ -420,7 +422,8 @@
                     </div>
                 </div>
 
-                {{-- Footer --}}
+                {{-- Footer (masqué pour les rôles sans droits d'édition) --}}
+                @if($this->canManagePersonnel)
                 <div class="px-6 py-4 border-t border-gray-100 bg-white flex items-center justify-between gap-3">
                     <button wire:click="confirmDelete"
                             wire:confirm="Êtes-vous sûr de vouloir supprimer cette fiche ? Cette action est irréversible."
@@ -469,6 +472,7 @@
                         @endif
                     </div>
                 </div>
+                @endif
 
             </div>
         </div>
